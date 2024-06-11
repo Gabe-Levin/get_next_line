@@ -1,0 +1,6 @@
+Makefile
+*.o
+*.a
+*.txt
+tempCodeRunnerFile.c
+.vscode/
