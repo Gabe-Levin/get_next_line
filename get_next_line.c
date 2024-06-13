@@ -6,7 +6,7 @@
 /*   By: glevin <glevin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/09 11:29:50 by glevin            #+#    #+#             */
-/*   Updated: 2024/06/12 20:08:17 by glevin           ###   ########.fr       */
+/*   Updated: 2024/06/13 21:45:18 by glevin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,7 +99,7 @@ char	*ft_strjoin(char const *s1, char const *s2)
 	s3[s1_len + i] = '\0';
 	return (s3);
 }
-int	ft_strchr(const char *str, int c)
+int	ft_istrchr(const char *str, int c)
 {
 	int	i;
 
@@ -107,7 +107,7 @@ int	ft_strchr(const char *str, int c)
 	while (str[i] != (unsigned char)c)
 	{
 		if (!str[i++])
-			return (0);
+			return (-1);
 	}
 	return (i);
 }
@@ -116,19 +116,10 @@ char	*add_to_stash(char *stash, char *buf)
 {
 	char	*tmp_stash;
 
-	if (stash == NULL)
-	{
-		stash = (char *)malloc(1);
-		if (stash == NULL)
-		{
-			free(buf);
-			return (NULL);
-		}
-		stash[0] = '\0';
-	}
 	tmp_stash = ft_strjoin(stash, buf);
 	if (tmp_stash == NULL)
 	{
+		free(buf);
 		free(stash);
 		return (NULL);
 	}
@@ -142,8 +133,8 @@ char	*check_new_line(char **stash)
 	char	*next_line;
 	char	*tmp_stash;
 
-	eol_loc = ft_strchr(*stash, '\n');
-	if (eol_loc != 0)
+	eol_loc = ft_istrchr(*stash, '\n');
+	if (eol_loc >= 0)
 	{
 		next_line = ft_substr(*stash, 0, eol_loc + 1);
 		tmp_stash = ft_strdup(*stash + eol_loc + 1);
@@ -159,65 +150,79 @@ char	*check_new_line(char **stash)
 	return (NULL);
 }
 
-char	*get_next_line(int fd)
+char	*read_file(int fd, char **stash)
 {
-	char		*buf;
-	char		*next_line;
-	static char	*stash;
-	int			byte_cnt;
+	char	*buf;
+	int		byte_cnt;
+	char	*next_line;
 
-	// Handle errors with fd
-	if (fd < 0 || BUFFER_SIZE <= 0 || read(fd, 0, 0) < 0)
-		return (NULL);
+	byte_cnt = 1;
 	buf = (char *)malloc((BUFFER_SIZE + 1) * sizeof(char));
 	if (buf == NULL)
 		return (NULL);
-	while ((byte_cnt = read(fd, buf, BUFFER_SIZE)) != 0)
+	next_line = check_new_line(stash);
+	while (!next_line && byte_cnt != 0)
 	{
+		byte_cnt = read(fd, buf, BUFFER_SIZE);
 		buf[byte_cnt] = '\0';
-		stash = add_to_stash(stash, buf);
-		next_line = check_new_line(&stash);
-		if (next_line)
-			return next_line;
+		*stash = add_to_stash(*stash, buf);
+		if (*stash == NULL)
+		{
+			free(buf);
+			free(*stash);
+			return (NULL);
+		}
+		next_line = check_new_line(stash);
 	}
-	if (byte_cnt < 0)
+	free(buf);
+	if (byte_cnt == 0)
 	{
-		free(buf);
-		free(stash);
-		stash = NULL;
+		next_line = ft_strdup(*stash);
+		*stash = NULL;
+		free(*stash);
+	}
+	return (next_line);
+}
+
+char	*get_next_line(int fd)
+{
+	char		*next_line;
+	static char	*stash;
+
+	if (stash == NULL)
+	{
+		stash = (char *)malloc(1);
+		if (stash == NULL)
+			return (NULL);
+		stash[0] = '\0';
+	}
+	if (fd < 0 || BUFFER_SIZE <= 0 || read(fd, 0, 0) < 0)
 		return (NULL);
-	}
-	// Handle end of file
-	if (stash[0] != '\0')
-	{
-		next_line = ft_strdup(stash);
-		free(stash);
-		stash = NULL;
-		free(buf);
+	next_line = read_file(fd, &stash);
+	if (ft_strlen(next_line) != 0)
 		return (next_line);
-	}
 	free(stash);
 	stash = NULL;
-	free(buf);
+	free(next_line);
 	return (NULL);
 }
 
-int	main(void)
-{
-	int fd;
-	int i;
-	char *line;
+// int	main(void)
+// {
+// 	int fd;
+// 	int i;
+// 	char *line;
 
-	i = 0;
+// 	i = 0;
 
-	fd = open("test2.txt", O_RDONLY);
-	while ((line = get_next_line(fd)) != NULL && i < 20)
-	{
-		// printf("fd: %i", fd);
-		printf("%i: %s\n", i, line);
-		free(line);
-		// printf("TEST RESULT: %s", get_next_line(fd));
-		i++;
-	}
-	return (1);
-}
+// 	fd = open("test2.txt", O_RDONLY);
+// 	while ((line = get_next_line(fd)) != NULL && i < 20)
+// 	{
+// 		// printf("fd: %i", fd);
+// 		printf("%i: %s", i, line);
+// 		free(line);
+// 		// printf("TEST RESULT: %s", get_next_line(fd));
+// 		i++;
+// 	}
+// 	return (1);
+// }
