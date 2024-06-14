@@ -1,29 +1,19 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line.c                                    :+:      :+:    :+:   */
+/*   get_next_line_bonus.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: glevin <glevin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/09 11:29:50 by glevin            #+#    #+#             */
-/*   Updated: 2024/06/14 20:35:08 by glevin           ###   ########.fr       */
+/*   Updated: 2024/06/14 23:58:57 by glevin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "get_next_line.h"
-
-int	ft_istrchr(const char *str, int c)
-{
-	int	i;
-
-	i = 0;
-	while (str[i] != (unsigned char)c)
-	{
-		if (!str[i++])
-			return (-1);
-	}
-	return (i);
-}
+#include "get_next_line_bonus.h"
+#ifndef MAX_FD
+# define MAX_FD 1024
+#endif
 
 void	add_to_stash(char **stash, char *buf)
 {
@@ -94,49 +84,34 @@ char	*read_file(int fd, char **stash)
 	return (next_line);
 }
 
+// char	*get_current_stash(char **stash, int fd)
+// {
+
+// }
+
 char	*get_next_line(int fd)
 {
 	char		*next_line;
-	static char	*stash;
+	static char	*stash[1024];
 
-	if (stash == NULL)
+	if (stash[fd] == NULL)
 	{
-		stash = (char *)malloc(1);
-		if (stash == NULL)
+		stash[fd] = (char *)malloc(1);
+		if (stash[fd] == NULL)
 			return (NULL);
-		stash[0] = '\0';
+		stash[fd][0] = '\0';
 	}
-	if (fd < 0 || BUFFER_SIZE <= 0 || read(fd, 0, 0) < 0)
+	if (fd < 0 || BUFFER_SIZE <= 0 || 1024 <= fd || read(fd, 0, 0) < 0)
 	{
-		free(stash);
-		stash = NULL;
+		free(stash[fd]);
+		stash[fd] = NULL;
 		return (NULL);
 	}
-	next_line = read_file(fd, &stash);
+	next_line = read_file(fd, &stash[fd]);
 	if (ft_strlen(next_line) != 0)
 		return (next_line);
-	free(stash);
-	stash = NULL;
+	free(stash[fd]);
+	stash[fd] = NULL;
 	free(next_line);
 	return (NULL);
 }
-
-// int	main(void)
-// {
-// 	int fd;
-// 	int i;
-// 	char *line;
-
-// 	i = 0;
-
-// 	fd = open("test2.txt", O_RDONLY);
-// 	while ((line = get_next_line(fd)) != NULL && i < 20)
-// 	{
-// 		// printf("fd: %i", fd);
-// 		printf("%i: %s", i, line);
-// 		free(line);
-// 		// printf("TEST RESULT: %s", get_next_line(fd));
-// 		i++;
-// 	}
-// 	return (1);
-// }
