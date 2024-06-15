@@ -1,6 +1,10 @@
 # Get_Next_Line
 
 ## Overview
+<div style="text-align: center; margin: 10px;">
+  <img src="Score.png" alt="Alt text" />
+</div>
+
 The `get_next_line` project involves creating a function that reads and returns a line from a given file descriptor. This function can be repeatedly called to read a file one line at a time.
 
 The main.c file can be used for testing the project localy.
