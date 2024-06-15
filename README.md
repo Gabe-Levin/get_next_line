@@ -1,9 +1,8 @@
 # Get_Next_Line
 
 ## Overview
-<div style="text-align: center; margin: 10px;">
-  <img src="Score.png" alt="Alt text" />
-</div>
+|![Score](./imgs/Score.png)|
+|:--:|
 
 The `get_next_line` project involves creating a function that reads and returns a line from a given file descriptor. This function can be repeatedly called to read a file one line at a time.
 
@@ -36,4 +35,4 @@ Replace <size> with the desired buffer size.
 A special thanks to [xicodomingues' francinette](https://github.com/xicodomingues/francinette) testing suite.
 
 ## Example Output
-![Alt text](ExampleOutput.png)
+![Sample Output](./imgs/ExampleOutput.png)
