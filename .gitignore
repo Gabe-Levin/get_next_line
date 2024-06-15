@@ -1,6 +1,5 @@
 *.o
 *.a
-*.txt
 tempCodeRunnerFile.c
 .vscode/
 main.c
