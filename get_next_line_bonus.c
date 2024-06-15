@@ -6,7 +6,7 @@
 /*   By: glevin <glevin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/09 11:29:50 by glevin            #+#    #+#             */
-/*   Updated: 2024/06/14 23:58:57 by glevin           ###   ########.fr       */
+/*   Updated: 2024/06/15 16:26:29 by glevin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,9 @@
 # define MAX_FD 1024
 #endif
 
+/*
+This function adds the new buffer from the latest read to the end of the stash.
+*/
 void	add_to_stash(char **stash, char *buf)
 {
 	char	*tmp_stash;
@@ -33,6 +36,11 @@ void	add_to_stash(char **stash, char *buf)
 	}
 }
 
+/*
+This one checks the stash for a new line character. If end of line location
+(eol_loc) is not negative, extract that new line and create a new stack
+with this line removed.
+*/
 char	*check_new_line(char **stash)
 {
 	int		eol_loc;
@@ -56,6 +64,14 @@ char	*check_new_line(char **stash)
 	return (NULL);
 }
 
+/*
+This one reads the file and saves them to buf. BUFFER_SIZE determines how
+many bytes are read from the file on a given call. This function will
+continue reading the file in BUFFER_SIZE size chunks, as the end of the
+file hasn't been reached (byte_cnt ==0) and there is no new line character
+in stash. If the end of the file is reached AND there is no new line in
+stash, return stash and free it.
+*/
 char	*read_file(int fd, char **stash)
 {
 	char	*buf;
@@ -84,11 +100,24 @@ char	*read_file(int fd, char **stash)
 	return (next_line);
 }
 
-// char	*get_current_stash(char **stash, int fd)
-// {
+/*
+This one is initializing the static char *stash, in order to have access to
+this pointer across multiple function calls. We are checking if the file
+descriptior (FD) and BUFFER_SIZE are valid, or if the file is corrupted.
+If all looks kosher, we start reading the file into buffer and begin
+looking for new lines.
 
-// }
+BONUS: This approach initializes stash as an array of char
+pointers of length 1024 (an arbitrarily high number for fd). This allows
+the function to handle multiple fd's at once. The pointer to the stash
+corresponding to a given fd, is stored in the 'fd' index of stash.
+Given an fd, the stash[fd] is passed to read_file.
 
+A more storage efficient approach, would be to use a linked list.
+This would allow us to store only the minimum required amount of
+space for handling multiple fds, as appose to immediately initalizing
+a large array of pointers.
+*/
 char	*get_next_line(int fd)
 {
 	char		*next_line;

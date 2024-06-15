@@ -6,12 +6,16 @@
 /*   By: glevin <glevin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/09 11:29:54 by glevin            #+#    #+#             */
-/*   Updated: 2024/06/14 21:36:52 by glevin           ###   ########.fr       */
+/*   Updated: 2024/06/15 16:18:16 by glevin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line_bonus.h"
 
+/*
+This function determines the index of a new line character within str,
+if there is one. If not, it will return -1.
+*/
 int	ft_istrchr(const char *str, int c)
 {
 	int	i;
@@ -25,6 +29,10 @@ int	ft_istrchr(const char *str, int c)
 	return (i);
 }
 
+/*
+The	function takes a string as an argument and returns its length.
+The returned value is of type size_t (an unsigned integer type).
+*/
 size_t	ft_strlen(const char *str)
 {
 	size_t	size;
@@ -37,6 +45,10 @@ size_t	ft_strlen(const char *str)
 	return (size);
 }
 
+/*
+The function strdup() duplicates a string. It returns a pointer to
+null-terminated byte string.
+*/
 char	*ft_strdup(const char *string)
 {
 	char	*str2;
@@ -56,6 +68,10 @@ char	*ft_strdup(const char *string)
 	return (str2);
 }
 
+/*
+Allocates (with malloc(3)) and returns a substring from the string ’s’.
+The substring begins at index ’start’ and is of maximum size ’len’
+*/
 char	*ft_substr(char const *s, unsigned int start, size_t len)
 {
 	char			*substr;
@@ -80,6 +96,11 @@ char	*ft_substr(char const *s, unsigned int start, size_t len)
 	return (substr);
 }
 
+/*
+Allocates (with malloc(3)) and returns a new
+string, which is the result of the concatenation
+of ’s1’ and ’s2’.
+*/
 char	*ft_strjoin(char const *s1, char const *s2)
 {
 	char	*s3;

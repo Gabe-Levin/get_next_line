@@ -6,12 +6,16 @@
 /*   By: glevin <glevin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/09 11:29:50 by glevin            #+#    #+#             */
-/*   Updated: 2024/06/14 20:35:08 by glevin           ###   ########.fr       */
+/*   Updated: 2024/06/15 16:18:38 by glevin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
+/*
+This function determines the index of a new line character within str,
+if there is one. If not, it will return -1.
+*/
 int	ft_istrchr(const char *str, int c)
 {
 	int	i;
@@ -25,6 +29,9 @@ int	ft_istrchr(const char *str, int c)
 	return (i);
 }
 
+/*
+This function adds the new buffer from the latest read to the end of the stash.
+*/
 void	add_to_stash(char **stash, char *buf)
 {
 	char	*tmp_stash;
@@ -43,6 +50,11 @@ void	add_to_stash(char **stash, char *buf)
 	}
 }
 
+/*
+This one checks the stash for a new line character. If end of line location
+(eol_loc) is not negative, extract that new line and create a new stack
+with this line removed.
+*/
 char	*check_new_line(char **stash)
 {
 	int		eol_loc;
@@ -66,6 +78,14 @@ char	*check_new_line(char **stash)
 	return (NULL);
 }
 
+/*
+This one reads the file and saves them to buf. BUFFER_SIZE determines how
+many bytes are read from the file on a given call. This function will
+continue reading the file in BUFFER_SIZE size chunks, as the end of the
+file hasn't been reached (byte_cnt ==0) and there is no new line character
+in stash. If the end of the file is reached AND there is no new line in
+stash, return stash and free it.
+*/
 char	*read_file(int fd, char **stash)
 {
 	char	*buf;
@@ -94,6 +114,13 @@ char	*read_file(int fd, char **stash)
 	return (next_line);
 }
 
+/*
+This one is initializing the static char *stash, in order to have access to
+this pointer across multiple function calls. We are checking if the file
+descriptior (FD) and BUFFER_SIZE are valid, or if the file is corrupted.
+If all looks kosher, we start reading the file into buffer and begin
+looking for new lines.
+*/
 char	*get_next_line(int fd)
 {
 	char		*next_line;
@@ -120,23 +147,3 @@ char	*get_next_line(int fd)
 	free(next_line);
 	return (NULL);
 }
-
-// int	main(void)
-// {
-// 	int fd;
-// 	int i;
-// 	char *line;
-
-// 	i = 0;
-
-// 	fd = open("test2.txt", O_RDONLY);
-// 	while ((line = get_next_line(fd)) != NULL && i < 20)
-// 	{
-// 		// printf("fd: %i", fd);
-// 		printf("%i: %s", i, line);
-// 		free(line);
-// 		// printf("TEST RESULT: %s", get_next_line(fd));
-// 		i++;
-// 	}
-// 	return (1);
-// }

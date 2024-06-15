@@ -6,12 +6,16 @@
 /*   By: glevin <glevin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/09 11:29:54 by glevin            #+#    #+#             */
-/*   Updated: 2024/06/13 22:47:03 by glevin           ###   ########.fr       */
+/*   Updated: 2024/06/15 16:16:03 by glevin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
+/*
+The	function takes a string as an argument and returns its length.
+The returned value is of type size_t (an unsigned integer type).
+*/
 size_t	ft_strlen(const char *str)
 {
 	size_t	size;
@@ -24,6 +28,9 @@ size_t	ft_strlen(const char *str)
 	return (size);
 }
 
+/*
+The	function copies n characters from memory area src to memory area dest.
+*/
 void	*ft_memcpy(void *dest, const void *src, size_t n)
 {
 	size_t	i;
@@ -39,6 +46,10 @@ void	*ft_memcpy(void *dest, const void *src, size_t n)
 	return (dest);
 }
 
+/*
+The function strdup() duplicates a string. It returns a pointer to
+null-terminated byte string.
+*/
 char	*ft_strdup(const char *string)
 {
 	char	*str2;
@@ -51,6 +62,10 @@ char	*ft_strdup(const char *string)
 	return ((char *)ft_memcpy(str2, string, string_len));
 }
 
+/*
+Allocates (with malloc(3)) and returns a substring from the string ’s’.
+The substring begins at index ’start’ and is of maximum size ’len’
+*/
 char	*ft_substr(char const *s, unsigned int start, size_t len)
 {
 	char			*substr;
@@ -75,6 +90,11 @@ char	*ft_substr(char const *s, unsigned int start, size_t len)
 	return (substr);
 }
 
+/*
+Allocates (with malloc(3)) and returns a new
+string, which is the result of the concatenation
+of ’s1’ and ’s2’.
+*/
 char	*ft_strjoin(char const *s1, char const *s2)
 {
 	char	*s3;
