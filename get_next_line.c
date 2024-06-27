@@ -16,9 +16,9 @@
 This function determines the index of a new line character within str,
 if there is one. If not, it will return -1.
 */
-int	ft_istrchr(const char *str, int c)
+int ft_istrchr(const char *str, int c)
 {
-	int	i;
+	int i;
 
 	i = 0;
 	while (str[i] != (unsigned char)c)
@@ -32,9 +32,9 @@ int	ft_istrchr(const char *str, int c)
 /*
 This function adds the new buffer from the latest read to the end of the stash.
 */
-void	add_to_stash(char **stash, char *buf)
+void add_to_stash(char **stash, char *buf)
 {
-	char	*tmp_stash;
+	char *tmp_stash;
 
 	tmp_stash = ft_strjoin(*stash, buf);
 	if (tmp_stash == NULL)
@@ -55,11 +55,11 @@ This one checks the stash for a new line character. If end of line location
 (eol_loc) is not negative, extract that new line and create a new stack
 with this line removed.
 */
-char	*check_new_line(char **stash)
+char *check_new_line(char **stash)
 {
-	int		eol_loc;
-	char	*next_line;
-	char	*tmp_stash;
+	int eol_loc;
+	char *next_line;
+	char *tmp_stash;
 
 	eol_loc = ft_istrchr(*stash, '\n');
 	if (eol_loc >= 0)
@@ -86,11 +86,11 @@ file hasn't been reached (byte_cnt ==0) and there is no new line character
 in stash. If the end of the file is reached AND there is no new line in
 stash, return stash and free it.
 */
-char	*read_file(int fd, char **stash)
+char *read_file(int fd, char **stash)
 {
-	char	*buf;
-	int		byte_cnt;
-	char	*next_line;
+	char *buf;
+	int byte_cnt;
+	char *next_line;
 
 	byte_cnt = 1;
 	buf = (char *)malloc((BUFFER_SIZE + 1) * sizeof(char));
@@ -117,14 +117,14 @@ char	*read_file(int fd, char **stash)
 /*
 This one is initializing the static char *stash, in order to have access to
 this pointer across multiple function calls. We are checking if the file
-descriptior (FD) and BUFFER_SIZE are valid, or if the file is corrupted.
+descriptor (FD) and BUFFER_SIZE are valid, or if the file is corrupted.
 If all looks kosher, we start reading the file into buffer and begin
 looking for new lines.
 */
-char	*get_next_line(int fd)
+char *get_next_lines(int fd)
 {
-	char		*next_line;
-	static char	*stash;
+	char *next_line;
+	static char *stash;
 
 	if (stash == NULL)
 	{
